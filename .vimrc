@@ -1,4 +1,43 @@
+" Vim Settings ---------------- {{{
+augroup filetype_vim
+    au!
+    au FileType vim setlocal foldmethod=marker
+    au BufRead,BufNewFile {Vagrantfile,Gemfile,Capfile} set ft=ruby
+    au FileType ruby,eruby,scss setl sw=2 sts=2 et
+    au FileType javascript,coffee setl sw=2 sts=2 et
+    au FileType yaml setl sw=2 sts=2 et
+augroup END
 set nocompatible
+syntax on
+let mapleader=','
+set history=500
+set backspace=eol,start,indent
+set listchars=tab:->,trail:-,nbsp:%
+set list
+set wildmenu
+set visualbell
+set lazyredraw
+set cmdheight=2
+set cursorline
+set hidden
+set nofoldenable
+set number
+set hlsearch
+set ignorecase
+set smartcase
+set nobackup
+set noswapfile
+set tabstop=4
+set expandtab
+set shiftwidth=4
+set softtabstop=4
+set t_Co=256
+set keymap=russian-jcukenwin
+set iminsert=0
+set imsearch=0
+colorscheme jellybeans
+" }}}
+" Vundle ------------- {{{
 filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
@@ -18,101 +57,69 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'elzr/vim-json'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'bling/vim-airline'
-" Plugin 'jeetsukumaran/vim-buffergator'
+Plugin 'mattn/emmet-vim'
 Plugin 'majutsushi/tagbar'
 Plugin 'sheerun/vim-polyglot'
+Plugin 'csscomb/vim-csscomb'
 
 call vundle#end()
 
 filetype on
 filetype plugin indent on
-syntax on
-
-let mapleader=','
-
-" Sets how many lines of history VIM has to remember
-set history=500
-
-" Configure backspace so it acts as it should act
-set backspace=eol,start,indent
-" enhanced command completion
-set wildmenu
-
-set visualbell
-" Don't redraw while executing macros (good performance config)
-set lazyredraw
-
-set cursorline
-set hidden
-set nofoldenable
-set number
-set hlsearch
-set ignorecase
-set smartcase
-
-set tabstop=5
-set expandtab
-set shiftwidth=4
-set softtabstop=4
-set t_Co=256
-colorscheme jellybeans
+" }}}
+" Rsense --- {{{
+let g:rsenseHome = expand("~/rsense/rsense-0.3")
+let g:rsenseUseOmniFunc = 1
+" }}}
+" Syntastic ------- {{{
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 0
 let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
 let g:syntastic_javascript_checkers = ['eslint']
 let g:syntastic_haml_checkers = ['haml_lint', 'haml']
 let g:syntastic_ruby_checkers = ['rubocop', 'mri']
+let g:syntastic_scss_checkers= ['scss_lint']
 " let g:syntastic_erlang_checkers = ['syntaxerl', 'escript']
 " let g:syntastic_php_checkers=['phpcs', 'php']
 " let g:syntastic_php_phpcs_exec='~/.composer/vendor/bin/phpcs'
 " let g:syntastic_php_phpcs_args='--standard=PSR2 -n'
-
-" Map ctrl-movement keys to window switching
-" map <C-k> <C-w><Up>
-" map <C-j> <C-w><Down>
-" map <C-l> <C-w><Right>
-" map <C-h> <C-w><Left>
-
-" Toggle paste mode
-nmap <silent> <F4> :set invpaste<CR>:set paste?<CR>
-imap <silent> <F4> <ESC>:set invpaste<CR>:set paste?<CR>
-
-" format the entire file
-nnoremap <leader>fef :normal! gg=G``<CR>
-
-" set text wrapping toggles
-nmap <silent> <leader>tw :set invwrap<CR>:set wrap?<CR>
-
-" find merge conflict markers
-nmap <silent> <leader>fc <ESC>/\v^[<=>]{7}( .*\|$)<CR>
-
-" upper/lower word
-nmap <leader>u mQviwU`Q
-nmap <leader>l mQviwu`Q
-
+" }}}
+" Statusline ---- {{{
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+" }}}
+" NERDTree -------------{{{
 nmap <C-\> :NERDTreeFind<CR>
 nmap <silent> <leader><leader> :NERDTreeToggle<CR>
-
-noremap ,hl :set hlsearch! hlsearch?<CR>
-
-" Allows you to enter sudo pass and save the file
-" when you forgot to open your file with sudo
+" }}}
+" Tagbar ----- {{{
+nnoremap <silent> <leader>t :TagbarToggle<CR>
+" }}}
+" Custom mappings ---- {{{
+nnoremap <leader>ve :vsplit $MYVIMRC<cr>
+nnoremap <leader>va :source $MYVIMRC<cr>
+nmap <silent> <F4> :set invpaste<CR>:set paste?<CR>
+imap <silent> <F4> <ESC>:set invpaste<CR>:set paste?<CR>
+" sudo save
 cmap w!! %!sudo tee > /dev/null %
-
-" Allow to copy/paste between VIM instances
-"copy the current visual selection to ~/.vbuf
-vmap <Leader>y :w! ~/.vbuf<CR>
-"copy the current line to the buffer file if no visual selection
-nmap <Leader>y :.w! ~/.vbuf<CR>
-"paste the contents of the buffer file
-nmap <Leader>p :r ~/.vbuf<CR>
-au BufRead,BufNewFile {Vagrantfile,Gemfile,Capfile} set ft=ruby
-" autocmd FileType ruby compiler ruby
-au FileType ruby setl sw=2 sts=2 et
-au FileType javascript setl sw=2 sts=2 et
-au FileType yaml setl sw=2 sts=2 et
-
+vmap <F5> "+y
+vmap <F6> "+p
+nmap <F6> "+p
+imap <F6> <Esc>"+pa
+noremap ,hl :set hlsearch! hlsearch?<CR>
+noremap <leader>q :q!<cr>
+noremap <leader>s :w<cr>
+noremap <C-m> <S-o><C-c>
+" }}}
+" Abbreviations -------- {{{
+" remove backspace in abbrev
+func Eatchar(pat)
+   let c = nr2char(getchar(0))
+   return (c =~ a:pat) ? '' : c
+endfunc
+" some abbrevs
+iab vdp var_dump(); die('1');<esc><s-b><s-b>f'a<C-R>=Eatchar('\s')<CR>
+iab clg console.log();<Left><Left><C-R>=Eatchar('\s')<CR>
+" }}}
