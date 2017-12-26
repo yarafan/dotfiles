@@ -4,6 +4,7 @@ augroup filetype_vim
     au FileType vim setlocal foldmethod=marker
     au BufRead,BufNewFile {Vagrantfile,Gemfile,Capfile} set ft=ruby
     au FileType ruby,eruby,scss setl sw=2 sts=2 et
+    au FileType yaml,eruby.yaml setlocal commentstring=#\ %s
     au FileType javascript,coffee setl sw=2 sts=2 et
     au FileType yaml setl sw=2 sts=2 et
 augroup END
@@ -22,15 +23,16 @@ set cursorline
 set hidden
 set nofoldenable
 set number
+set backupcopy=yes
 set hlsearch
 set ignorecase
 set smartcase
 set nobackup
 set noswapfile
-set tabstop=4
+set tabstop=2
 set expandtab
-set shiftwidth=4
-set softtabstop=4
+set shiftwidth=2
+set softtabstop=2
 set t_Co=256
 set keymap=russian-jcukenwin
 set iminsert=0
@@ -52,7 +54,7 @@ Plugin 'tpope/vim-rails'
 Plugin 'tpope/vim-git'
 Plugin 'tpope/vim-rake'
 Plugin 'tpope/vim-bundler'
-Plugin 'scrooloose/syntastic'
+Plugin 'w0rp/ale'
 Plugin 'scrooloose/nerdtree'
 Plugin 'elzr/vim-json'
 Plugin 'ctrlpvim/ctrlp.vim'
@@ -61,29 +63,25 @@ Plugin 'mattn/emmet-vim'
 Plugin 'majutsushi/tagbar'
 Plugin 'sheerun/vim-polyglot'
 Plugin 'csscomb/vim-csscomb'
+Plugin 'othree/yajs.vim'
+Plugin 'othree/javascript-libraries-syntax.vim'
+Plugin 'othree/es.next.syntax.vim'
 
 call vundle#end()
 
 filetype on
 filetype plugin indent on
 " }}}
+" ALE --- {{{
+let g:ale_ruby_rubocop_executable = 'bundle'
+" }}}
+" Syntax highlighting--- {{{
+let g:used_javascript_libs = 'jquery,underscore,react,chai,requirejs'
+let g:polyglot_disabled = ['javascript']
+" }}}
 " Rsense --- {{{
 let g:rsenseHome = expand("~/rsense/rsense-0.3")
 let g:rsenseUseOmniFunc = 1
-" }}}
-" Syntastic ------- {{{
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 0
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
-let g:syntastic_javascript_checkers = ['eslint']
-let g:syntastic_haml_checkers = ['haml_lint', 'haml']
-let g:syntastic_ruby_checkers = ['rubocop', 'mri']
-let g:syntastic_scss_checkers= ['scss_lint']
-" let g:syntastic_erlang_checkers = ['syntaxerl', 'escript']
-" let g:syntastic_php_checkers=['phpcs', 'php']
-" let g:syntastic_php_phpcs_exec='~/.composer/vendor/bin/phpcs'
-" let g:syntastic_php_phpcs_args='--standard=PSR2 -n'
 " }}}
 " Statusline ---- {{{
 set statusline+=%#warningmsg#
@@ -123,3 +121,30 @@ endfunc
 iab vdp var_dump(); die('1');<esc><s-b><s-b>f'a<C-R>=Eatchar('\s')<CR>
 iab clg console.log();<Left><Left><C-R>=Eatchar('\s')<CR>
 " }}}
+"
+"" FOR ESLINT SYNTASTIC EXEC
+fun! s:GetNodeModulesAbsPath ()
+  let lcd_saved = fnameescape(getcwd())
+  silent! exec "lcd" expand('%:p:h')
+  let path = finddir('node_modules', '.;')
+  exec "lcd" lcd_saved
+  return path is '' ? '' : fnamemodify(path, ':p')
+endfun
+fun! s:GetEslintExec (node_modules)
+  let eslint_guess = a:node_modules is '' ? '' : a:node_modules . '.bin/eslint'
+  return exepath(eslint_guess)
+endfun
+fun! s:LetEslintExec (eslint_exec)
+  if a:eslint_exec isnot ''
+    let g:syntastic_javascript_eslint_exec = a:eslint_exec
+  endif
+endfun
+
+fun! s:main ()
+  let node_modules = s:GetNodeModulesAbsPath()
+  let eslint_exec = s:GetEslintExec(node_modules)
+  call s:LetEslintExec(eslint_exec)
+endfun
+
+call s:main()
+"" FOR ESLINT SYNTASTIC EXEC
