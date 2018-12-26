@@ -124,30 +124,3 @@ endfunc
 iab vdp var_dump(); die('1');<esc><s-b><s-b>f'a<C-R>=Eatchar('\s')<CR>
 iab clg console.log()<Left><C-R>=Eatchar('\s')<CR>
 " }}}
-"
-"" FOR ESLINT SYNTASTIC EXEC
-fun! s:GetNodeModulesAbsPath ()
-  let lcd_saved = fnameescape(getcwd())
-  silent! exec "lcd" expand('%:p:h')
-  let path = finddir('node_modules', '.;')
-  exec "lcd" lcd_saved
-  return path is '' ? '' : fnamemodify(path, ':p')
-endfun
-fun! s:GetEslintExec (node_modules)
-  let eslint_guess = a:node_modules is '' ? '' : a:node_modules . '.bin/eslint'
-  return exepath(eslint_guess)
-endfun
-fun! s:LetEslintExec (eslint_exec)
-  if a:eslint_exec isnot ''
-    let g:syntastic_javascript_eslint_exec = a:eslint_exec
-  endif
-endfun
-
-fun! s:main ()
-  let node_modules = s:GetNodeModulesAbsPath()
-  let eslint_exec = s:GetEslintExec(node_modules)
-  call s:LetEslintExec(eslint_exec)
-endfun
-
-call s:main()
-"" FOR ESLINT SYNTASTIC EXEC
