@@ -72,6 +72,9 @@ call vundle#end()
 filetype on
 filetype plugin indent on
 " }}}
+" CTRLP--- {{{
+let g:ctrlp_arg_map = 1
+" }}}
 " ALE --- {{{
 let g:ale_ruby_rubocop_executable = 'bundle'
 " }}}
@@ -119,7 +122,7 @@ func Eatchar(pat)
 endfunc
 " some abbrevs
 iab vdp var_dump(); die('1');<esc><s-b><s-b>f'a<C-R>=Eatchar('\s')<CR>
-iab clg console.log();<Left><Left><C-R>=Eatchar('\s')<CR>
+iab clg console.log()<Left><C-R>=Eatchar('\s')<CR>
 " }}}
 "
 "" FOR ESLINT SYNTASTIC EXEC
