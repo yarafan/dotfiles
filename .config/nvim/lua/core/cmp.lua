@@ -20,23 +20,6 @@ if not pairs_ok then
 end
 
 local cmp_autopairs = require "nvim-autopairs.completion.cmp"
-local ts_utils = require("nvim-treesitter.ts_utils")
-local ts_node_func_parens_disabled = {
-  named_imports = true,
-  use_declaration = true,
-}
-local default_handler = cmp_autopairs.filetypes["*"]["("].handler
-cmp_autopairs.filetypes["*"]["("].handler = function(char, item, bufnr, rules, commit_character)
-  local node_type = ts_utils.get_node_at_cursor():type()
-  if ts_node_func_parens_disabled[node_type] then
-    if item.data then
-      item.data.funcParensDisabled = true
-    else
-      char = ""
-    end
-  end
-  default_handler(char, item, bufnr, rules, commit_character)
-end
 
 require("luasnip/loaders/from_vscode").lazy_load()
 
@@ -106,11 +89,9 @@ cmp.setup {
       c = cmp.mapping.close(),
     },
     ["<CR>"] = cmp.mapping.confirm { select = true },
-    ["<C-j>"] = cmp.mapping(function(fallback)
+    ["<Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
-      elseif luasnip.expand_or_jumpable() then
-        luasnip.expand_or_jump()
       elseif has_words_before() then
         cmp.complete()
       else
@@ -118,11 +99,9 @@ cmp.setup {
       end
     end, { "i", "s" }),
 
-    ["<C-k>"] = cmp.mapping(function(fallback)
+    ["<S-Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
-      elseif luasnip.jumpable(-1) then
-        luasnip.jump(-1)
       else
         fallback()
       end
@@ -131,7 +110,6 @@ cmp.setup {
   formatting = {
     fields = { "kind", "abbr", "menu" },
     format = function(entry, vim_item)
-      -- vim_item.kind = string.format("%s", kind_icons[vim_item.kind])
       vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind) -- This concatonates the icons with the name of the item kind
       vim_item.menu = ({
         nvim_lsp = "[LSP]",
@@ -143,24 +121,11 @@ cmp.setup {
     end,
   },
   sources = {
+    { name = "luasnip" },
     { name = 'nvim_lsp' },
     { name = 'nvim_lua' },
-    { name = "luasnip" },
     { name = "buffer" },
     { name = "path" },
-  },
-  confirm_opts = {
-    behavior = cmp.ConfirmBehavior.Replace,
-    select = false,
-  },
-  window = {
-    documentation = {
-      border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
-    },
-  },
-  experimental = {
-    ghost_text = false,
-    native_menu = false,
   },
 }
 

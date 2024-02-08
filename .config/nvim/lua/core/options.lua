@@ -18,7 +18,7 @@ local options = {
   list = true, -- show <Tab> and <EOL>
   wildmenu = true, -- use menu for command line completion
   visualbell = true, -- use visual bell instead of beeping
-  lazyredraw = true, -- don't redraw while executing macros
+  lazyredraw = false, -- don't redraw while executing macros
   cmdheight = 2, -- number of lines to use for the command-line
   hidden = true, -- don't unload buffer when it is abandoned
   foldenable = false, -- set to display all folds open
@@ -34,6 +34,7 @@ local options = {
   softtabstop = 2, -- number of spaces that <Tab> uses while editing
   tags = 'tags', -- list of file names used by the tag command
   termguicolors = true, -- user terminal colors
+  conceallevel = 2
 }
 
 for k,v in pairs(options) do

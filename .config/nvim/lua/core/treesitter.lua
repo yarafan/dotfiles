@@ -12,6 +12,7 @@ end
 local languages = {
   "bash",
   "c",
+  "cpp",
   "dockerfile",
   "erlang",
   "git_config",
@@ -28,6 +29,8 @@ local languages = {
   "ini",
   "javascript",
   "json",
+  "json5",
+  "jsonc",
   "jq",
   "lua",
   "luadoc",

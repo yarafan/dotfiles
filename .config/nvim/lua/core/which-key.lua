@@ -3,24 +3,29 @@ if not status_ok then
   return
 end
 
+local snip_status_ok, luasnip = pcall(require, "luasnip")
+if not snip_status_ok then
+  return
+end
+
 local setup = {
   plugins = {
-    marks = true, -- shows a list of your marks on ' and `
-    registers = true, -- shows your registers on " in NORMAL or <C-r> in INSERT mode
+    marks = true,       -- shows a list of your marks on ' and `
+    registers = true,   -- shows your registers on " in NORMAL or <C-r> in INSERT mode
     spelling = {
-      enabled = true, -- enabling this will show WhichKey when pressing z= to select spelling suggestions
+      enabled = true,   -- enabling this will show WhichKey when pressing z= to select spelling suggestions
       suggestions = 20, -- how many suggestions should be shown in the list?
     },
     -- the presets plugin, adds help for a bunch of default keybindings in Neovim
     -- No actual key bindings are created
     presets = {
-      operators = true, -- adds help for operators like d, y, ... and registers them for motion / text object completion
-      motions = true, -- adds help for motions
+      operators = true,    -- adds help for operators like d, y, ... and registers them for motion / text object completion
+      motions = true,      -- adds help for motions
       text_objects = true, -- help for text objects triggered after entering an operator
-      windows = true, -- default bindings on <c-w>
-      nav = true, -- misc bindings to work with windows
-      z = true, -- bindings for folds, spelling and others prefixed with z
-      g = true, -- bindings for prefixed with g
+      windows = true,      -- default bindings on <c-w>
+      nav = true,          -- misc bindings to work with windows
+      z = true,            -- bindings for folds, spelling and others prefixed with z
+      g = true,            -- bindings for prefixed with g
     },
   },
   -- add operators that will trigger motion and text object completion
@@ -43,26 +48,26 @@ local setup = {
   },
   popup_mappings = {
     scroll_down = "<c-d>", -- binding to scroll down inside the popup
-    scroll_up = "<c-u>", -- binding to scroll up inside the popup
+    scroll_up = "<c-u>",   -- binding to scroll up inside the popup
   },
   window = {
-    border = "rounded", -- none, single, double, shadow
-    position = "bottom", -- bottom, top
-    margin = { 1, 0, 1, 0 }, -- extra window margin [top, right, bottom, left]
+    border = "rounded",       -- none, single, double, shadow
+    position = "bottom",      -- bottom, top
+    margin = { 1, 0, 1, 0 },  -- extra window margin [top, right, bottom, left]
     padding = { 2, 2, 2, 2 }, -- extra window padding [top, right, bottom, left]
     winblend = 0,
   },
   layout = {
-    height = { min = 4, max = 25 }, -- min and max height of the columns
-    width = { min = 20, max = 50 }, -- min and max width of the columns
-    spacing = 3, -- spacing between columns
-    align = "left", -- align columns left, center or right
+    height = { min = 4, max = 25 },                                             -- min and max height of the columns
+    width = { min = 20, max = 50 },                                             -- min and max width of the columns
+    spacing = 3,                                                                -- spacing between columns
+    align = "left",                                                             -- align columns left, center or right
   },
-  ignore_missing = true, -- enable this to hide mappings for which you didn't specify a label
+  ignore_missing = true,                                                        -- enable this to hide mappings for which you didn't specify a label
   hidden = { "<silent>", "<cmd>", "<Cmd>", "<CR>", "call", "lua", "^:", "^ " }, -- hide mapping boilerplate
-  show_help = true, -- show help message on the command line when the popup is visible
-  show_keys = true, -- show the currently pressed key and its label as a message in the command line
-  triggers = "auto", -- automatically setup triggers
+  show_help = true,                                                             -- show help message on the command line when the popup is visible
+  show_keys = true,                                                             -- show the currently pressed key and its label as a message in the command line
+  triggers = "auto",                                                            -- automatically setup triggers
   -- triggers = {"<leader>"} -- or specify a list manually
   triggers_blacklist = {
     -- list of mode / prefixes that should never be hooked by WhichKey
@@ -100,44 +105,37 @@ local setup = {
 -- keymap.set("n", "<C-k>", "<C-w>k", opts)
 -- keymap.set("n", "<C-l>", "<C-w>l", opts)
 local custom_opts = {
-  mode = "n", -- NORMAL mode
+  mode = "n",     -- NORMAL mode
   prefix = "",
-  buffer = nil, -- Global mappings. Specify a buffer number for buffer local mappings
-  silent = true, -- use `silent` when creating keymaps
+  buffer = nil,   -- Global mappings. Specify a buffer number for buffer local mappings
+  silent = true,  -- use `silent` when creating keymaps
   noremap = true, -- use `noremap` when creating keymaps
-  nowait = true, -- use `nowait` when creating keymaps
+  nowait = true,  -- use `nowait` when creating keymaps
 }
 
 local custom_mappings = {
-  ["<C-l>"] = { "<cmd>noh<cr>", "Remove search highlight"},
-  ["<C-h>"] = { "<cmd>NvimTreeToggle<cr>", "Toggle NvimTree"},
+  ["<C-h>"] = { "<cmd>NvimTreeToggle<cr>", "Toggle NvimTree" },
 }
 
 
 -- Leader mappings
 local leader_opts = {
-  mode = "n", -- NORMAL mode
+  mode = "n",     -- NORMAL mode
   prefix = "<leader>",
-  buffer = nil, -- Global mappings. Specify a buffer number for buffer local mappings
-  silent = true, -- use `silent` when creating keymaps
+  buffer = nil,   -- Global mappings. Specify a buffer number for buffer local mappings
+  silent = true,  -- use `silent` when creating keymaps
   noremap = true, -- use `noremap` when creating keymaps
-  nowait = true, -- use `nowait` when creating keymaps
+  nowait = true,  -- use `nowait` when creating keymaps
 }
 
 local leader_mappings = {
-  ["b"] = {
-    "<cmd>lua require('telescope.builtin').buffers(require('telescope.themes').get_dropdown{previewer = false})<cr>",
-    "Buffers",
+  ["<leader>"] = {
+    ["s"] = { "<cmd>source ~/.config/nvim/after/plugin/luasnip.lua<cr>", "Relaod luasnip config" },
   },
   ["h"] = { "<cmd>NvimTreeToggle<cr>", "Explorer" },
   ["w"] = { "<cmd>w!<CR>", "Save" },
   ["q"] = { "<cmd>q!<CR>", "Quit" },
   ["c"] = { "<cmd>Bdelete!<CR>", "Close Buffer" },
-  ["f"] = {
-    "<cmd>lua require('telescope.builtin').find_files(require('telescope.themes').get_dropdown{previewer = false})<cr>",
-    "Find files",
-  },
-  ["F"] = { "<cmd>Telescope live_grep theme=ivy<cr>", "Find Text" },
 
   g = {
     name = "Git",
@@ -157,6 +155,7 @@ local leader_mappings = {
       "<cmd>lua require 'gitsigns'.reset_buffer_index()<cr>",
       "Undo Stage Hunk",
     },
+    b = { "<cmd>Telescope git_branches<cr>", "Find branch" },
     s = { "<cmd>Telescope git_status<cr>", "Open changed file" },
     c = { "<cmd>Telescope git_commits<cr>", "Checkout commit" },
     d = {
@@ -206,17 +205,67 @@ local leader_mappings = {
 
   s = {
     name = "Search",
-    b = { "<cmd>Telescope git_branches<cr>", "Checkout branch" },
-    c = { "<cmd>Telescope colorscheme<cr>", "Colorscheme" },
+    c = { "<cmd>lua require('telescope.builtin').commands(require('telescope.themes').get_dropdown{})<cr>", "Commands" },
+    ["F"] = { "<cmd>Telescope live_grep theme=ivy<cr>", "Find Text" },
+    ["b"] = {
+      "<cmd>lua require('telescope.builtin').buffers(require('telescope.themes').get_dropdown{previewer = false})<cr>",
+      "Buffers",
+    },
+    ["f"] = {
+      "<cmd>lua require('telescope.builtin').find_files(require('telescope.themes').get_dropdown{previewer = false})<cr>",
+      "Find files",
+    },
     h = { "<cmd>Telescope help_tags<cr>", "Find Help" },
-    M = { "<cmd>Telescope man_pages<cr>", "Man Pages" },
-    r = { "<cmd>Telescope oldfiles<cr>", "Open Recent File" },
-    R = { "<cmd>Telescope registers<cr>", "Registers" },
-    k = { "<cmd>Telescope keymaps<cr>", "Keymaps" },
-    C = { "<cmd>Telescope commands<cr>", "Commands" },
+    M = { "<cmd>Telescope man_pages<cr>", "Find Man Pages" },
+    r = { "<cmd>Telescope oldfiles<cr>", "Find Open Recent File" },
+    R = { "<cmd>Telescope registers<cr>", "Find Registers" },
+    k = { "<cmd>Telescope keymaps<cr>", "Find Keymaps" },
   },
 }
-
 which_key.setup(setup)
 which_key.register(custom_mappings, custom_opts)
 which_key.register(leader_mappings, leader_opts)
+which_key.register(
+  {
+    y = { '"+y', "Yank +" },
+  },
+  {
+    mode = "v",
+    prefix = "<leader>",
+
+  }
+)
+which_key.register(
+  {
+    p = { '"+p', "Paste +" },
+  },
+  {
+    mode = "n",
+    prefix = "<leader>",
+
+  }
+)
+which_key.register(
+  {
+    ["<C-j>"] = { function()
+      if luasnip.expand_or_jumpable() then
+        luasnip.expand_or_jump()
+      end
+    end, "Luasnip expand" },
+
+    ["<C-k>"] = { function()
+      if luasnip.jumpable(-1) then
+        luasnip.jump(-1)
+      end
+    end, "Luasnip go back" },
+
+    ["<C-l>"] = { function()
+      if luasnip.choice_active() then
+        luasnip.change_choice(-1)
+      end
+    end, "Luasnip go back" },
+  },
+  {
+    mode = { "i" },
+  }
+)

@@ -1,6 +1,7 @@
 local servers = {
   "gopls",
   "lua_ls",
+  "jsonls",
 }
 
 local settings = {

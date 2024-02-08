@@ -44,3 +44,14 @@ autocmd('FileType', {
   pattern = { 'python' },
   command = 'setlocal shiftwidth=4 softtabstop=4 expandtab autoindent'
 })
+
+autocmd(
+  {
+    "BufWritePre",
+  },
+  {
+    group = "filetype_vim",
+    pattern = "*",
+    command = "lua vim.lsp.buf.format()",
+  }
+)
