@@ -263,7 +263,7 @@ which_key.register(
       if luasnip.choice_active() then
         luasnip.change_choice(-1)
       end
-    end, "Luasnip go back" },
+    end, "Luasnip change choice" },
   },
   {
     mode = { "i" },

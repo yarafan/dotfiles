@@ -35,7 +35,7 @@ autocmd('FileType', {
 
 autocmd('FileType', {
   group = 'filetype_vim',
-  pattern = { 'ruby', 'eruby', 'scss', 'javascript', 'coffee', 'yml', 'yaml' },
+  pattern = { 'ruby', 'eruby', 'scss', 'javascript', 'coffee', 'yml', 'yaml', 'markdown' },
   command = 'setlocal shiftwidth=2 softtabstop=2 expandtab'
 })
 
@@ -51,7 +51,7 @@ autocmd(
   },
   {
     group = "filetype_vim",
-    pattern = "*",
+    pattern = { '*.lua', '*.go', '*.rb' },
     command = "lua vim.lsp.buf.format()",
   }
 )

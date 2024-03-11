@@ -40,6 +40,7 @@ local languages = {
   "objdump",
   "proto",
   "python",
+  "query",
   "regex",
   "ruby",
   "rust",

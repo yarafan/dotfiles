@@ -1,0 +1,31 @@
+
+-- Globals
+-- LS_SELECT_RAW visual selction as is
+-- LS_SELECT_DEDENT visual selection no indentation
+-- TM_SELECTED_TEXT - visual selection
+-- s - snippet
+-- sn - snippet node
+-- isn - snippet node with indentation
+-- t - text node
+-- i - insert node
+-- f - function node
+-- c - choice node
+-- d - dynamic node
+-- r - restore node
+-- event - events package ?
+-- k - key indexer
+-- ai absolute indexer 
+-- extras - extras package
+-- l - extras lambda
+-- rep - extras repeat node
+-- p - extras partial
+-- m - extras match
+-- n - extras nonempty
+-- dl - extras dynamic lambda
+-- fmt - extras format nodes
+-- fmta extas format nodes with <> delimiter
+-- conds extras expand conditions
+-- postfix - extras postfix
+-- types - util types ?
+-- parse - parse snippet
+-- ms - multisnippet

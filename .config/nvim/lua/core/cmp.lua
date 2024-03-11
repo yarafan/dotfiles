@@ -9,11 +9,6 @@ if not cmp_status_ok then
   return
 end
 
-local snip_status_ok, luasnip = pcall(require, "luasnip")
-if not snip_status_ok then
-  return
-end
-
 local pairs_ok, npairs = pcall(require, "nvim-autopairs")
 if not pairs_ok then
   return
@@ -21,7 +16,6 @@ end
 
 local cmp_autopairs = require "nvim-autopairs.completion.cmp"
 
-require("luasnip/loaders/from_vscode").lazy_load()
 
 local kind_icons = {
   Text = "󰉿",
@@ -76,7 +70,7 @@ npairs.setup {
 cmp.setup {
   snippet = {
     expand = function(args)
-      luasnip.lsp_expand(args.body) -- For `luasnip` users.
+      require'luasnip'.lsp_expand(args.body) -- For `luasnip` users.
     end,
   },
   mapping = {
