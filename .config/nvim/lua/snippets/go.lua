@@ -327,8 +327,26 @@ return {
       {
         d(1, function(_, snip)
           local input = snip.env.TM_SELECTED_TEXT[1]
-          local parts = vim.split(input, "=", { plain = true })
+          if input == nil then
+            return sn(nil,
+              fmta(
+                [[
+                if err <> nil {
+                  <>
+                }
+              ]],
+                {
+                  c(1, {
+                    t("!="),
+                    t("==")
+                  }),
+                  i(2)
+                }
+              )
+            )
+          end
 
+          local parts = vim.split(input, "=", { plain = true })
           if input ~= nil and not parts[1]:find(",") then
             return sn(nil,
               fmta(
@@ -369,23 +387,6 @@ return {
               )
             )
           end
-
-          return sn(nil,
-            fmta(
-              [[
-                if err <> nil {
-                  <>
-                }
-              ]],
-              {
-                c(1, {
-                  t("!="),
-                  t("==")
-                }),
-                i(2)
-              }
-            )
-          )
         end, {}),
         i(0)
       }
