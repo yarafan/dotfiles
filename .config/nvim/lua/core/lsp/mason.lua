@@ -1,7 +1,16 @@
 local servers = {
-  "gopls",
-  "lua_ls",
-  "jsonls",
+	"gopls",
+	"lua_ls",
+	"jsonls",
+	"yamlls",
+	"pylsp",
+	"clangd",
+	"clangd",
+	"jdtls",
+}
+
+local daps = {
+	"delve"
 }
 
 local settings = {
@@ -10,8 +19,13 @@ local settings = {
 }
 
 require("mason").setup(settings)
-require("mason-lspconfig").setup({
-	ensure_installed = servers
+
+-- require("mason-lspconfig").setup({
+-- 	ensure_installed = servers,
+-- })
+
+require("mason-nvim-dap").setup({
+	ensure_installed = daps
 })
 
 local lspconfig_status_ok, lspconfig = pcall(require, "lspconfig")
